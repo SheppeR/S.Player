@@ -1,0 +1,28 @@
+﻿<Application
+    x:Class="S.Player.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:modern="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:viewModels="clr-namespace:S.Player.ViewModels"
+    xmlns:xamlFlair="clr-namespace:XamlFlair;assembly=XamlFlair.WPF"
+    d1p1:Ignorable="d"
+    ShutdownMode="OnExplicitShutdown">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <xamlFlair:XamlFlairResources />
+                <modern:ThemeResources
+                    AccentColor="Fuchsia"
+                    CanBeAccessedAcrossThreads="False"
+                    RequestedTheme="Dark" />
+                <modern:XamlControlsResources />
+
+            </ResourceDictionary.MergedDictionaries>
+            <viewModels:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
+
+            <!--<SolidColorBrush x:Key="{x:Static ui:ThemeKeys.ApplicationPageBackgroundThemeBrushKey}" Color="#2B2B2B"/>-->
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
