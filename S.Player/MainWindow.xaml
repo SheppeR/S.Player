@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ikw="http://schemas.inkore.net/lib/ui/wpf"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:S.Player.Pages"
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     Width="1150"
     Height="650"
@@ -83,7 +84,8 @@
                 <ui:NavigationViewItem
                     x:Name="HomePage"
                     Content="HOME"
-                    FontSize="24">
+                    FontSize="24"
+                    Tag="{x:Type pages:HomePage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Home}" />
                     </ui:NavigationViewItem.Icon>
@@ -92,7 +94,8 @@
                 <ui:NavigationViewItem
                     x:Name="DownloaderPage"
                     Content="DOWNLOADER"
-                    FontSize="24">
+                    FontSize="24"
+                    Tag="{x:Type pages:DownloaderPage}">
                     <ui:NavigationViewItem.Icon>
                         <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Game}" />
                     </ui:NavigationViewItem.Icon>

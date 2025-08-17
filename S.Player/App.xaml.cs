@@ -8,23 +8,29 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using S.Player.Options;
 using S.Player.Pages;
+using S.Player.Services.InfoBar;
 using S.Player.Utils.Extensions;
-using S.Player.Utils.Managers;
 using S.Player.Utils.Options;
 using S.Player.ViewModels.Pages;
 using S.Player.ViewModels.Windows;
+using Serilog;
 
 namespace S.Player;
 
 public partial class App
 {
     private static readonly IHost _host = Host.CreateDefaultBuilder()
-        .ConfigureAppConfiguration(config => { _ = config.AddJsonFile("appsettings.json", false, true); })
+        .ConfigureAppConfiguration(config => { _ = config.AddJsonFile("appsettings.json", false, true); }).UseSerilog((context, services, configuration) =>
+        {
+            configuration.ReadFrom.Configuration(context.Configuration)
+                .ReadFrom.Services(services)
+                .Enrich.FromLogContext();
+        })
         .ConfigureServices((context, services) =>
             {
                 _ = services.ConfigureWritable<Configuration>(context.Configuration.GetSection("Configuration"));
 
-                _ = services.AddSingleton<InfosBarManager>();
+                _ = services.AddSingleton<IInfoBarService, InfoBarService>();
 
                 _ = services.AddSingleton<MainWindow>();
                 _ = services.AddSingleton<MainWindowViewModel>();
@@ -43,53 +49,70 @@ public partial class App
 
                 _ = services.AddSingleton<AboutPage>();
                 _ = services.AddSingleton<AboutPageViewModel>();
-                /*_ = services.AddSingleton<INavigationService, NavigationService>();
-                _ = services.AddSingleton<ISnackbarService, SnackbarService>();
-                _ = services.AddSingleton<IContentDialogService, ContentDialogService>();*/
             }
         )
         .Build();
 
     protected override async void OnStartup(StartupEventArgs e)
     {
-        await _host.StartAsync();
-
-        var configuration = GetRequiredService<IWritableOptions<Configuration>>();
-        var infosBarManager = GetRequiredService<InfosBarManager>();
-
-        var downloadPath = configuration.Value.DownloadPath;
-        if (!Directory.Exists(downloadPath))
+        try
         {
-            Directory.CreateDirectory(downloadPath!);
-            infosBarManager.ShowInfo($"Le dossier \"'{downloadPath}\" a ete crée!");
-        }
+            await _host.StartAsync();
 
-        var ffmpegPath = configuration.Value.FFMpegPath;
-        if (!File.Exists(ffmpegPath))
+            var _window = _host.Services.GetRequiredService<MainWindow>();
+            _window.Show();
+
+            var configuration = GetRequiredService<IWritableOptions<Configuration>>();
+            var infosBarManager = GetRequiredService<IInfoBarService>();
+
+            var downloadPath = configuration.Value.DownloadPath;
+            if (!Directory.Exists(downloadPath))
+            {
+                Directory.CreateDirectory(downloadPath!);
+                infosBarManager.ShowInfo($"Le dossier \"'{downloadPath}\" a ete crée!");
+                configuration.Update(opt => { opt.DownloadPath = downloadPath; });
+            }
+
+            /*var ffmpegPath = configuration.CurrentValue.FFMpegPath;
+         if (!File.Exists(ffmpegPath))
+         {
+             infosBarManager.ShowInfo(
+                 "Le dossier FfMpeg est introuvable. Vous pouvez éditer le fichier config \"appsettings.json\" avec le bon chemin.");
+         }*/
+            //TODO TAOST FFMPEGPATH
+
+            ThemeManager.Current.ApplicationTheme = configuration.Value.Theme;
+
+
+            if (!string.IsNullOrEmpty(configuration.Value.Accent))
+            {
+                ThemeManager.Current.AccentColor =
+                    (Color)ColorConverter.ConvertFromString(configuration.Value.Accent);
+            }
+
+            base.OnStartup(e);
+        }
+        catch (Exception ex)
         {
-            infosBarManager.ShowInfo(
-                "Le dossier FfMpeg est introuvable. Vous pouvez éditer le fichier config \"appsettings.json\" avec le bon chemin.");
+            Log.Fatal(ex, "Unhandled exception on startup");
+            throw;
         }
-        //TODO TAOST FFMPEGPATH
-
-        ThemeManager.Current.ApplicationTheme = configuration.Value.Theme;
-        if (!string.IsNullOrEmpty(configuration.Value.Accent))
-        {
-            ThemeManager.Current.AccentColor = (Color)ColorConverter.ConvertFromString(configuration.Value.Accent);
-        }
-
-        var _window = _host.Services.GetRequiredService<MainWindow>();
-        _window.Show();
-
-        base.OnStartup(e);
     }
 
     protected override async void OnExit(ExitEventArgs e)
     {
-        await _host.StopAsync(TimeSpan.FromSeconds(5));
-        _host.Dispose();
+        try
+        {
+            await _host.StopAsync(TimeSpan.FromSeconds(5));
+            _host.Dispose();
 
-        base.OnExit(e);
+            base.OnExit(e);
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(ex, "Unhandled exception on exit");
+            throw;
+        }
     }
 
     public static T GetRequiredService<T>()

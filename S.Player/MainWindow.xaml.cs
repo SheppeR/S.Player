@@ -1,5 +1,7 @@
-﻿using iNKORE.UI.WPF.Modern.Controls;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using iNKORE.UI.WPF.Modern.Controls;
 using S.Player.Pages;
+using S.Player.Services.InfoBar;
 
 namespace S.Player;
 
@@ -8,6 +10,16 @@ public partial class MainWindow
     public MainWindow()
     {
         InitializeComponent();
+
+        WeakReferenceMessenger.Default.Register<InfoBarMessage>(this, (_, msg) =>
+        {
+            InfoBar.Title = msg.Severity == InfoBarSeverity.Error ? "ERROR" : "INFO";
+            InfoBar.Message = msg.Message;
+            InfoBar.Severity = msg.Severity;
+            InfoBar.IsOpen = true;
+            InfoBar.IsClosable = true;
+        });
+
         Loaded += (_, _) => { NavigationView.SelectedItem = HomePage; };
 
         // await InputBox.ShowAsync("title", "msg", "test");
@@ -24,10 +36,8 @@ public partial class MainWindow
         }
         else
         {
-            var item = sender.SelectedItem as NavigationViewItem;
-            var type = Type.GetType($"S.Player.Pages.{item?.Name}, S.Player");
-            var page = App.GetRequiredPage(type ?? typeof(ErrorPage));
-
+            var pageType = args.SelectedItemContainer?.Tag as Type ?? typeof(ErrorPage);
+            var page = App.GetRequiredPage(pageType);
             NavigationFrame.Navigate(page);
         }
     }
