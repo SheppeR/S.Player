@@ -1,0 +1,51 @@
+{
+  "LanguageName": {
+    "en": "English",
+    "fr": "Français"
+  },
+  "ApplicationName": {
+    "en": "GenX.Project",
+    "fr": "GenX.Project"
+  },
+  "MainMenuHome": {
+    "en": "Home",
+    "fr": "Accueil"
+  },
+  "MainMenuApps": {
+    "en": "Apps",
+    "fr": "Applications"
+  },
+  "MainMenuSettings": {
+    "en": "Settings",
+    "fr": "Parametre"
+  },
+  "MainMenuAbout": {
+    "en": "About",
+    "fr": "A Propos"
+  },
+  "SettingsMenuTheme": {
+    "en": "Appearance",
+    "fr": "Apparence"
+  },
+  "SettingsMenuOther": {
+    "en": "Other",
+    "fr": "Autre"
+  },
+  "AppThemeSettingsCard": {
+    "en": "Application theme",
+    "fr": "Theme de l'application"
+  },
+  "AppThemeSettingsDesc": {
+    "en": "Select which app theme to display",
+    "fr": "Selectionnez le theme de l'application"
+  },
+    "AppAccentSettingsCard": {
+        "en": "Application Accent Color",
+        "fr": "Couleur principale de l'application"
+    },
+  "AppAccentSettingsDesc": {
+    "en": "Select which app accent color to display",
+    "fr": "Selectionnez la couleur principale de l'application"
+  }
+}
+

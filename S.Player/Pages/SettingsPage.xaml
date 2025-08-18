@@ -11,23 +11,18 @@
     d:DesignWidth="800"
     DataContext="{Binding SettingsPage, Source={StaticResource Locator}}"
     mc:Ignorable="d">
-
-
     <Grid>
         <modern:ScrollViewerEx
             x:Name="contentSV"
             IsTabStop="False"
             VerticalScrollBarVisibility="Auto">
             <TabControl x:Name="tabControl" Style="{StaticResource TabControlPivotStyle}">
-
-                <TabItem Header="DESIGN">
+                <TabItem Header="{Tr SettingsMenuTheme}">
                     <content:ContentAppearence Margin="5,20" />
                 </TabItem>
-
-                <TabItem Header="TODO">
+                <TabItem Header="{Tr SettingsMenuOther}">
                     <!--  TODO  -->
                 </TabItem>
-
             </TabControl>
         </modern:ScrollViewerEx>
     </Grid>

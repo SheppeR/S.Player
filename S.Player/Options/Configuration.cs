@@ -11,4 +11,6 @@ public class Configuration
     public ApplicationTheme Theme { get; set; }
 
     public string? Accent { get; set; }
+
+    public string Language { get; set; } = "fr";
 }

@@ -10,6 +10,7 @@ using S.Player.Options;
 using S.Player.Pages;
 using S.Player.Services.InfoBar;
 using S.Player.Utils.Extensions;
+using S.Player.Utils.Helpers;
 using S.Player.Utils.Options;
 using S.Player.ViewModels.Pages;
 using S.Player.ViewModels.Windows;
@@ -20,7 +21,8 @@ namespace S.Player;
 public partial class App
 {
     private static readonly IHost _host = Host.CreateDefaultBuilder()
-        .ConfigureAppConfiguration(config => { _ = config.AddJsonFile("appsettings.json", false, true); }).UseSerilog((context, services, configuration) =>
+        .ConfigureAppConfiguration(config => { _ = config.AddJsonFile("appsettings.json", false, true); })
+        .UseSerilog((context, services, configuration) =>
         {
             configuration.ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(services)
@@ -59,10 +61,21 @@ public partial class App
         {
             await _host.StartAsync();
 
+            var configuration = GetRequiredService<IWritableOptions<Configuration>>();
+
+            if (!string.IsNullOrEmpty(configuration.Value.Language))
+            {
+                LocalizerHelper.ConfigureLocalizer(configuration.Value.Language);
+            }
+            else
+            {
+                LocalizerHelper.ConfigureLocalizer("en");
+                configuration.Update(opt => { opt.Language = "en"; });
+            }
+
             var _window = _host.Services.GetRequiredService<MainWindow>();
             _window.Show();
 
-            var configuration = GetRequiredService<IWritableOptions<Configuration>>();
             var infosBarManager = GetRequiredService<IInfoBarService>();
 
             var downloadPath = configuration.Value.DownloadPath;

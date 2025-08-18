@@ -24,7 +24,8 @@
     <Window.Resources>
 
         <Style TargetType="ui:TitleBarButton">
-            <Setter Property="IsActive" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=IsActive}" />
+            <Setter Property="IsActive"
+                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=IsActive}" />
         </Style>
 
     </Window.Resources>
@@ -49,7 +50,9 @@
                 <Style TargetType="Image">
                     <Setter Property="Source" Value="pack://application:,,,/Assets/bg-light.png" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Source={x:Static ui:ThemeManager.Current}, Path=ActualApplicationTheme}" Value="Dark">
+                        <DataTrigger
+                            Binding="{Binding Source={x:Static ui:ThemeManager.Current}, Path=ActualApplicationTheme}"
+                            Value="Dark">
                             <Setter Property="Source" Value="pack://application:,,,/Assets/bg-dark.png" />
                         </DataTrigger>
                     </Style.Triggers>
@@ -62,7 +65,7 @@
             x:Name="NavigationView"
             Grid.Row="1"
             Margin="10,0,0,0"
-            AlwaysShowHeader="True"
+
             BackRequested="OnBackRequested"
             Canvas.ZIndex="5"
             IsBackButtonVisible="Auto"
@@ -83,7 +86,7 @@
             <ui:NavigationView.MenuItems>
                 <ui:NavigationViewItem
                     x:Name="HomePage"
-                    Content="HOME"
+                    Content="{Tr MainMenuHome}"
                     FontSize="24"
                     Tag="{x:Type pages:HomePage}">
                     <ui:NavigationViewItem.Icon>
@@ -93,7 +96,7 @@
 
                 <ui:NavigationViewItem
                     x:Name="DownloaderPage"
-                    Content="DOWNLOADER"
+                    Content="{Tr MainMenuApps}"
                     FontSize="24"
                     Tag="{x:Type pages:DownloaderPage}">
                     <ui:NavigationViewItem.Icon>
@@ -149,7 +152,8 @@
                     </ui:TitleBarButton>
                 </ikw:SimpleStackPanel>
 
-                <Rectangle Grid.Column="3" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=(ui:TitleBar.SystemOverlayRightInset)}" />
+                <Rectangle Grid.Column="3"
+                           Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Window}, Path=(ui:TitleBar.SystemOverlayRightInset)}" />
             </Grid>
         </Border>
 
